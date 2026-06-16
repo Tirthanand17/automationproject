@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+
+{% block title %}Generate AI Post{% endblock %}
+
+{% block content %}
+<section class="workspace" id="workspace">
+    <div class="input-panel">
+        <div class="card">
+            <span class="badge">MVP</span>
+            <h2>Create an AI Social Post</h2>
+            <p class="muted">Enter your idea. The backend agents will generate a caption, hashtags, and image preview.</p>
+
+            <form id="postForm" method="post" action="{% url 'generator:generate_post' %}">
+                {% csrf_token %}
+
+                <label for="id_topic">Topic</label>
+                {{ form.topic }}
+
+                <div class="grid-2">
+                    <div>
+                        <label for="id_platform">Platform</label>
+                        {{ form.platform }}
+                    </div>
+                    <div>
+                        <label for="id_tone">Tone</label>
+                        {{ form.tone }}
+                    </div>
+                </div>
+
+                <label for="id_image_style">Image Style</label>
+                {{ form.image_style }}
+
+                <button type="submit" id="generateBtn">Generate Post</button>
+                <p class="status" id="statusText"></p>
+            </form>
+        </div>
+
+        <div class="recent-card">
+            <h3>Recent Generated Posts</h3>
+            {% if recent_posts %}
+                {% for post in recent_posts %}
+                    <div class="recent-item">
+                        <strong>{{ post.topic }}</strong>
+                        <span>{{ post.get_platform_display }} • {{ post.created_at|date:"d M Y, h:i A" }}</span>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p class="muted">No posts generated yet.</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <aside class="preview-panel" id="previewPanel">
+        <div class="preview-header">
+            <div>
+                <span class="badge">Preview</span>
+                <h2 id="previewTopic">Generated Post</h2>
+            </div>
+            <button class="ghost-btn" id="copyBtn" type="button">Copy Caption</button>
+        </div>
+
+        <div class="image-box" id="imageBox">
+            <img id="previewImage" src="" alt="Generated preview" hidden>
+            <div id="imagePlaceholder">
+                <span>Image Prompt Preview</span>
+                <p id="previewImagePrompt"></p>
+            </div>
+        </div>
+
+        <div class="post-meta">
+            <span id="previewPlatform"></span>
+            <span id="previewTone"></span>
+            <span id="previewProvider"></span>
+        </div>
+
+        <div class="caption-box">
+            <h3>Caption</h3>
+            <p id="previewCaption"></p>
+        </div>
+
+        <div class="hashtags-box">
+            <h3>Hashtags</h3>
+            <div id="previewHashtags"></div>
+        </div>
+    </aside>
+</section>
+{% endblock %}
