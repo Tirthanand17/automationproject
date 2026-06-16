@@ -1,5 +1,4 @@
 import base64
-from pathlib import Path
 from uuid import uuid4
 
 from django.conf import settings
@@ -8,7 +7,6 @@ from google import genai
 
 
 def gemini_text(prompt: str) -> str:
-    """Generate text using Gemini."""
     if not settings.GEMINI_API_KEY:
         raise RuntimeError("GEMINI_API_KEY is missing. Add it in your .env file.")
 
@@ -21,10 +19,6 @@ def gemini_text(prompt: str) -> str:
 
 
 def gemini_image(prompt: str):
-    """Generate an image using a Gemini image-capable model.
-
-    Returns a Django ContentFile name/content tuple or None if no image bytes are returned.
-    """
     if not settings.GEMINI_API_KEY:
         raise RuntimeError("GEMINI_API_KEY is missing. Add it in your .env file.")
 
@@ -44,9 +38,9 @@ def gemini_image(prompt: str):
         if not inline_data:
             continue
 
-        image_bytes = inline_data.data
-        if isinstance(image_bytes, str):
-            image_bytes = base64.b64decode(image_bytes)
+        file_bytes = inline_data.data
+        if isinstance(file_bytes, str):
+            file_bytes = base64.b64decode(file_bytes)
 
         extension = "png"
         mime_type = getattr(inline_data, "mime_type", "") or ""
@@ -56,6 +50,6 @@ def gemini_image(prompt: str):
             extension = "webp"
 
         filename = f"generated_{uuid4().hex}.{extension}"
-        return filename, ContentFile(image_bytes)
+        return filename, ContentFile(file_bytes, name=filename)
 
     return None
