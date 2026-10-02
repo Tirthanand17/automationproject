@@ -1,5 +1,7 @@
 # PostPilot AI — Django AI Post Generator
 
+[![Django CI](https://github.com/Tirthanand17/automationproject/actions/workflows/ci.yml/badge.svg)](https://github.com/Tirthanand17/automationproject/actions/workflows/ci.yml)
+
 A Django-based AI post generation app. The user enters a topic, tone, platform, and image style. Backend AI agents generate a caption, hashtags, image prompt, and optional AI image. After generation, the frontend opens a right-side preview panel similar to an adjacent artifact/preview tab.
 
 ## Current MVP Features
